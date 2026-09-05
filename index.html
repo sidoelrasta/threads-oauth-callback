@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menghubungkan ke SocioGram...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      text-align: center;
+      padding: 50px 20px;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .card {
+      max-width: 450px;
+      margin: auto;
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 16px;
+      border: 1px solid #334155;
+    }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.1);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border-left-color: #38bdf8;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      background: #0284c7;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Mengalihkan ke SocioGram...</h2>
+    <div class="spinner"></div>
+    <p>Otorisasi berhasil. Membuka aplikasi secara otomatis...</p>
+    <div id="manualAction" style="display:none; margin-top: 20px;">
+      <p>Jika aplikasi tidak terbuka otomatis, klik tombol di bawah:</p>
+      <a id="deepLinkBtn" href="#" class="btn">Buka SocioGram</a>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let code = urlParams.get('code');
+    if (code) {
+      code = code.replace(/#_$/, '');
+      const deepLink = `sociomanager://auth/threads?code=${encodeURIComponent(code)}`;
+      
+      // Mengalihkan langsung ke aplikasi
+      window.location.href = deepLink;
+
+      setTimeout(() => {
+        const btn = document.getElementById('deepLinkBtn');
+        btn.href = deepLink;
+        document.getElementById('manualAction').style.display = 'block';
+      }, 1000);
+    } else {
+      document.querySelector('h2').innerText = "Halaman Callback Aktif";
+      document.querySelector('.spinner').style.display = 'none';
+      document.querySelector('p').innerText = "Silakan mulai otorisasi dari aplikasi.";
+    }
+  </script>
+</body>
+</html>
